@@ -1,7 +1,7 @@
 # Read in the CSV file
 table <- read.csv("survey_results.csv", fileEncoding = "Windows-1251", header = TRUE, sep = ";", check.names = F)
 
-data <- data[,-c(1,2)]
+data <- table[,-c(1,2)]
 
 # Count the number of people who preferred >7 and <3 for each column
 votes_gt7 <- apply(data, 2, function(x) sum(x > 7 & !is.na(x)))
