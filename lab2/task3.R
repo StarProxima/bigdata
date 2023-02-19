@@ -4,6 +4,6 @@ table <- read.csv("survey_results.csv", fileEncoding = "Windows-1251", header = 
 data <- table[,-c(1,2)]
 
 # Calculate the mean vote for each column and sort in descending order
-votes <- sort(apply(data, 2, function(x) mean(x)), decreasing = TRUE)
+votes <- sort(apply(data, 2, mean), decreasing = TRUE)
 
 print(votes)
