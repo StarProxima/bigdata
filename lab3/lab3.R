@@ -46,6 +46,7 @@ data_sorted <- data[order(data$Удача),]; data_sorted
 # Создаем subdataset из ФИО у кого Эффективность > 7
 high_grade <- subset(data, Эффективность > 7)
 
+# Квартели,
 summary(high_grade$Эффективность)
 
 #размерность
