@@ -33,10 +33,10 @@ prize_men <- data.frame(Год=men$year, Призовых=rowSums(men[, 2:4]))
 prize_women <- data.frame(Год=women$year, Призовых=rowSums(women[, 2:4]))
 
 par(mfrow=c(1,1))
-plot(prize_mix, type="b", pch=19, col="green", xaxt="n", ylim=c(0,2), main="Призовые места Германии по фигурному катанию за 30 лет")
+plot(prize_mix, type="b", pch=19, col="#3be8b0", xaxt="n", ylim=c(0,2), main="Призовые места Германии по фигурному катанию за 30 лет")
 lines(prize_men, type="o", pch=19, col="navyblue")
 lines(prize_women, type="o", pch=19, col="hotpink")
-legend(min(prize_mix$Год), 2, c("Микст", "Мужчины", "Женщины"), fill=c("green", "navyblue", "hotpink"))
+legend(min(prize_mix$Год), 2, c("Микст", "Мужчины", "Женщины"), fill=c("#3be8b0", "navyblue", "hotpink"))
 axis(side=1, at=prize_mix$year)
 
 
@@ -65,4 +65,20 @@ lines(events_prizes$Год, events_prizes$Нидерланды, type="o", pch=19
 axis(side=1, at=events_prizes$Год)
 legend(max(events_prizes$Год) - 1.5, 137, c("США", "Китай", "Япония", "Великобритания", "Россия", "Австралия", "Нидерланды"), fill=c("#3be8b0", "#1aafd0", "#6a67ce", "#ffb900", "gray70", "#2e3c54", "brown"))
 
+#выделим призовые места за последние 6 лет
+prize_mix_6 <- tail(prize_mix, 6)
+prize_men_6 <- tail(prize_men, 6)
+prize_women_6 <- tail(prize_women, 6)
 
+par(mfrow=c(1,3))
+plot(prize_mix_6, type="b", pch=19, col="#3be8b0", xaxt="n", ylim=c(0,7), main="Призовые места Германии по фигурному катанию\n за последние 6 ОИ")
+lines(prize_men_6, type="o", pch=11, col="navyblue")
+lines(prize_women_6, type="o", pch=11, col="hotpink")
+legend(min(prize_mix_6$Год), 7.2, cex=0.7 ,c("Микст", "Мужчины", "Женщины"), fill=c("#3be8b0", "navyblue", "hotpink"))
+axis(side=1, at=prize_mix_6$Год)
+
+prize_grouped = data.frame(Призовых_Микс=prize_mix_6$Призовых, Призовых_М=prize_men_6$Призовых, Призовых_Ж=prize_women_6$Призовых)
+barplot(height=t(as.matrix(prize_grouped)), beside=TRUE, xlab="Год", ylab="Количество", names.arg=prize_mix_6$Год, col=c("#3be8b0","navyblue", "hotpink"), main="Количество призовых мест Германия\n по фигурному катанию за последние 6 ОИ")
+
+prize_6_sum <- sapply(prize_grouped, sum)
+pie(prize_6_sum, labels=c(prize_6_sum["Призовых_Микс"], prize_6_sum["Призовых_М"], prize_6_sum["Призовых_Ж"]), col=c("#3be8b0", "navyblue", "hotpink"), main="Всего призовых мест у М и Ж из Германии\n по фигурному катанию за последние 6 ОИ")
