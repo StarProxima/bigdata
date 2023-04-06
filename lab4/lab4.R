@@ -26,3 +26,43 @@ legend(-1.1, 1.1, first_mix$`year`, cex = 0.7, fill=rainbow(length(first_mix$`ye
 
 #pie(first_women$`1`, labels=first_women$`1`, col=rainbow(length(first_women$`1`)), main = "Количество золотых медалей (мужчины)\nза все время")
 #legend(-1.1, 1.1, first_women$`year`, cex = 0.7, fill=rainbow(length(first_women$`year`)))
+
+#выделим призовые места
+prize_mix <- data.frame(Год=mix$year, Призовых=rowSums(mix[, 2:4]))
+prize_men <- data.frame(Год=men$year, Призовых=rowSums(men[, 2:4]))
+prize_women <- data.frame(Год=women$year, Призовых=rowSums(women[, 2:4]))
+
+par(mfrow=c(1,1))
+plot(prize_mix, type="b", pch=19, col="green", xaxt="n", ylim=c(0,2), main="Призовые места Германии по фигурному катанию за 30 лет")
+lines(prize_men, type="o", pch=19, col="navyblue")
+lines(prize_women, type="o", pch=19, col="hotpink")
+legend(min(prize_mix$Год), 2, c("Микст", "Мужчины", "Женщины"), fill=c("green", "navyblue", "hotpink"))
+axis(side=1, at=prize_mix$year)
+
+
+events_gold <- read.csv("gold_medals.csv", fileEncoding = "Windows-1251", header = TRUE, sep = ";", check.names = F)
+
+plot(events_gold$Год, events_gold$США, type="b", pch=19, col="#3be8b0", xaxt="n", ylim=c(0,50), xlab="Год", ylab="Золотых медалей", main="Золотые медали за 6 последних олимпиад")
+lines(events_gold$Год, events_gold$Китай, type="o", pch=19, col="#1aafd0")
+lines(events_gold$Год, events_gold$Япония, type="o", pch=19, col="#6a67ce")
+lines(events_gold$Год, events_gold$Великобритания, type="o", pch=19, col="#ffb900")
+lines(events_gold$Год, events_gold$Россия, type="o", pch=19, col="gray70")
+lines(events_gold$Год, events_gold$Австралия, type="o", pch=19, col="#2e3c54")
+lines(events_gold$Год, events_gold$Нидерланды, type="o", pch=19, col="brown")
+axis(side=1, at=events_gold$Год)
+legend(max(events_gold$Год) - 1.5, 53, c("США", "Китай", "Япония", "Великобритания", "Россия", "Австралия", "Нидерланды"), fill=c("#3be8b0", "#1aafd0", "#6a67ce", "#ffb900", "gray70", "#2e3c54", "brown"))
+
+
+events_prizes <- read.csv("priz_places.csv", fileEncoding = "Windows-1251", header = TRUE, sep = ";", check.names = F)
+
+plot(events_prizes$Год, events_prizes$США, type="b", pch=19, col="#3be8b0", xaxt="n", ylim=c(0,130), xlab="Год", ylab="Медалей", main="Призовые места за последние 6 олимпиад")
+lines(events_prizes$Год, events_prizes$КИТАЙ, type="o", pch=19, col="#1aafd0")
+lines(events_prizes$Год, events_prizes$Япония, type="o", pch=19, col="#6a67ce")
+lines(events_prizes$Год, events_prizes$Великобритания, type="o", pch=19, col="#ffb900")
+lines(events_prizes$Год, events_prizes$Россия, type="o", pch=19, col="gray70")
+lines(events_prizes$Год, events_prizes$Австралия, type="o", pch=19, col="#2e3c54")
+lines(events_prizes$Год, events_prizes$Нидерланды, type="o", pch=19, col="brown")
+axis(side=1, at=events_prizes$Год)
+legend(max(events_prizes$Год) - 1.5, 137, c("США", "Китай", "Япония", "Великобритания", "Россия", "Австралия", "Нидерланды"), fill=c("#3be8b0", "#1aafd0", "#6a67ce", "#ffb900", "gray70", "#2e3c54", "brown"))
+
+
