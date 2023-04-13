@@ -18,7 +18,7 @@ first_mix <- mix[,c(1:2)][mix$`1` > 0, ]
 first_men <- men[,c(1:2)][men$`1` > 0, ]
 first_women <- women[,c(1:2)][women$`1` > 0, ]
 
-pie(first_mix$`1`, labels=first_mix$`1`, col=rainbow(length(first_mix$`1`)), main = "Количество золотых медалей (мужчины)\nза все время")
+pie(first_mix$`1`, labels=first_mix$`1`, col=rainbow(length(first_mix$`1`)), main = "Количество золотых медалей (микст)\nза все время")
 legend(-1.1, 1.1, first_mix$`year`, cex = 0.7, fill=rainbow(length(first_mix$`year`)))
 
 #pie(first_men$`1`, labels=first_men$`1`, col=rainbow(length(first_men$`1`)), main = "Количество золотых медалей (мужчины)\nза все время")
