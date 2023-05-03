@@ -26,17 +26,17 @@ inf1 <- read.csv("Covid_Russia.csv", fileEncoding = "Windows-1251", header = TRU
 # inf1 <- na.omit(inf1)
 
 inf123<-inf1
-Countries<-inf1$Город
+Город<-inf1$Город
 
 # Шаг 3. Стандартизация переменных.
 # В данной задаче переменные существенно различны. Станадртизируем их
-# class(inf1[, 2])
-# class(inf1[, 3])
-# class(inf1[, 4])
-# class(inf1[, 5])
-# class(inf1[, 6])
+class(inf1[, 2])
+class(inf1[, 3])
+class(inf1[, 4])
+class(inf1[, 5])
+class(inf1[, 6])
 
-inf1[, 6] <- parse_number(inf1[, 6])
+# inf1[, 6] <- parse_number(inf1[, 6])
 
 inf2 <- scale(inf1[,2:6], center = TRUE, scale = TRUE)
 
@@ -48,11 +48,11 @@ mins <- apply(inf2, 2, min)
 inf2 <- scale(inf2, center = mins, scale = maxs - mins)
 # Вернем колонку "Страна"
 
-inf2<-data.frame(Countries,inf2)
+inf2<-data.frame(Город,inf2)
 
 # Создаем матрицу попарных расстояний (по умолчанию - Евклидово расстояние)
 
-dist.city <- dist(inf2 [,2:7])
+dist.city <- dist(inf2 [,2:6])
 
 # Проводим кластерный анализ,результаты записываем в список clust.protein
 
@@ -60,15 +60,19 @@ clust.city <- hclust(dist.city, "ward.D")
 
 #  Шаг 4.  Построение дендрограммы
 
-plot(clust.city, labels = inf1$strana,main="Дендограмма",ylab="Сходство",xlab="Страны")
+plot(clust.city, labels = inf1$strana,main="Дендограмма",ylab="Сходство",xlab="Города")
+
+
 
 k=5
 rect.hclust(clust.city, k, border="red")
 abline(h = 1.5, col = "blue", lwd='3') 
 
-plot(1:90, clust.city$height, type='b',xlab="Номер компоненты",ylab = "Собственное значение")
+length(clust.city$height)
 
-#  Разделим Страны на 4 кластера
+plot(1:84, clust.city$height, type='b',xlab="Номер компоненты",ylab = "Собственное значение")
+
+#  Разделим Страны на 5 кластеров
 #  Вектор groups содержит номер кластера, в который попал классифицируемый объект 
 groups <- cutree(clust.city, k) 
 # Разрезает дерево, например, полученное в результате hclust, на несколько групп 
@@ -92,25 +96,25 @@ inf1[groups==5, 1]
 #  какая доля стран в среднем кластере приобретала этот столбец
 
 #   в 1-ом кластере
-g1<-colMeans(inf1[groups==1, 2:7])
+g1<-colMeans(inf1[groups==1, 2:6])
 #   в 2-ом кластере
-g2<-colMeans(inf1[groups==2, 2:7])
+g2<-colMeans(inf1[groups==2, 2:6])
 #   в 3-ом кластере
-g3<-colMeans(inf1[groups==3, 2:7])
+g3<-colMeans(inf1[groups==3, 2:6])
 #   в 4-ом кластере
-g4<-colMeans(inf1[groups==4, 2:7])
+g4<-colMeans(inf1[groups==4, 2:6])
 #  в 5-ом кластере
-g5<-colMeans(inf1[groups==5, 2:7])
+g5<-colMeans(inf1[groups==5, 2:6])
 
-g11<-colMeans(inf2[groups==1, 2:7])
+g11<-colMeans(inf2[groups==1, 2:6])
 #   во 2-ом кластере
-g12<-colMeans(inf2[groups==2, 2:7])
+g12<-colMeans(inf2[groups==2, 2:6])
 #   во 3-ом кластере
-g13<-colMeans(inf2[groups==3, 2:7])
+g13<-colMeans(inf2[groups==3, 2:6])
 #   во 4-ом кластере
-g14<-colMeans(inf2[groups==4, 2:7])
+g14<-colMeans(inf2[groups==4, 2:6])
 #   во 5-ом кластере
-g15<-colMeans(inf2[groups==5, 2:7])
+g15<-colMeans(inf2[groups==5, 2:6])
 
 #   делаем дата фрейм из векторов групп кластеров
 
@@ -122,42 +126,40 @@ barplot(as.matrix(df2), col=c("magenta","red","yellow","blue","green","orange"))
 legend("topleft",cex=0.6, rownames(df2),fill=c("magenta","red","yellow","blue","green","orange") )
 
 barplot(df1[,1], ylim=range(pretty(c(0,max(df1[,1])))), 
-        main="Рождаемость", 
+        main="Случаев", 
         col=c("magenta","red","yellow","blue","green"),legend=rownames(df1))
 
 barplot(df1[,2], ylim=range(pretty(c(0,max(df1[,2])))), 
-        main="Cмертность", 
+        main="Выздоровело", 
         col=c("magenta","red","yellow","blue","green"),legend=rownames(df1))
 
 barplot(df1[,3], ylim=range(pretty(c(0,max(df1[,3])))), 
-        main="Детская смертность", 
+        main="Смертей", 
         col=c("magenta","red","yellow","blue","green"),legend=rownames(df1))
 
 barplot(df1[,4], ylim=range(pretty(c(0,max(df1[,4])))), 
-        main="Длительность жизни у мужчин", 
+        main="Случаев_на_млн", 
         col=c("magenta","red","yellow","blue","green"),legend=rownames(df1))
 
 barplot(df1[,5], ylim=range(pretty(c(0,max(df1[,5])))), 
-        main="Длительность жизни у женщин", 
-        col=c("magenta","red","yellow","blue","green"),legend=rownames(df1))
-
-barplot(df1[,6], ylim=range(pretty(c(0,max(df1[,6])))), 
-        main="Доход", 
+        main="Смертей_на_млн", 
         col=c("magenta","red","yellow","blue","green"),legend=rownames(df1))
 
 inf123["Group"]<-groups
 
+inf123 <- inf123[c(-1, -2, -3),]
+
 #выведем график рассеяния с минимальным количеством параметров с выделением имени
-xyplot(rozhdaem ~ smertnost,group = Group, data = inf123,auto.key = TRUE,pch = 20,cex = 1.5)
+xyplot(Случаев ~ Смертей_на_млн,group = Group, data = inf123,auto.key = TRUE,pch = 20,cex = 1.5)
 
 #усатый ящик, отражающий характеристики классов типов 
-boxplot(smertnost~Group , data =inf123, ylab = "Смерность", frame = FALSE, col = rainbow(3))
+boxplot(Смертей_на_млн~Group , data =inf123, ylab = "Смерность", frame = FALSE, col = rainbow(3))
 
 # График, классифицирующий типы согласно их полей
-xyplot(smertnost~dlit_muzh+dlit_zhen|Group,data=inf123, grid = T, auto.key=TRUE,pch = 20,cex = 1.5)
+xyplot(Случаев_на_млн~Выздоровело+Смертей|Group,data=inf123, grid = T, auto.key=TRUE,pch = 20,cex = 1.5)
 
 #Построим трехмерный график наших классов
-cloud(rozhdaem~smertnost*detsk_smertm, group = Group, data = inf123, auto.key = TRUE,pch = 20,cex = 1.5) 
+cloud(Случаев~Выздоровело*Смертей, group = Group, data = inf123, auto.key = TRUE,pch = 20,cex = 1.5) 
 packages <- c('ggplot2', 'dplyr', 'tidyr', 'tibble')
 
 inf123 %>%
