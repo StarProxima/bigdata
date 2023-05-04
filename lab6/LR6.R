@@ -163,18 +163,49 @@ cloud(Случаев~Выздоровело*Смертей, group = Group, data 
 packages <- c('ggplot2', 'dplyr', 'tidyr', 'tibble')
 
 inf123 %>%
-  ggplot(aes(rozhdaem, smertnost, color=Group))+geom_point()
+  ggplot(aes(Выздоровело, Смертей, color=Group))+geom_point()
 
 #ЧАСТЬ 2 
 
-city.01 <- read.csv("C:/Users/nagal/OneDrive/GitHub/BigData_moment/LR6/CPS1985.csv")
+city.01 <- read.csv("Covid_Russia_3.csv", fileEncoding = "Windows-1251", header = TRUE, sep = ";", check.names = F)
 city.01
-city.01 <- city.01[,-8]
+#city.01 <- city.01[,-8]
 
 #   Шаг 2.  Удаление пропущенных значений
 
-city.01$dohod[city.01$dohod==-9999] <- NA
+city.01$Смертей[city.01$Смертей ==0] <- NA
 city.01 <- na.omit(city.01)
+
+City<-city.01$Город
+
+# Шаг 3. Стандартизация переменных.
+# В данной задаче переменные существенно различны. Станадртизируем их
+
+
+ city.02 <- scale(city.01[,2:6], center = TRUE, scale = TRUE)
+
+# Исключим колонку "Страна"
+ city.02<-city.01[-1]
+ maxs <- apply(city.02, 2, max)
+ mins <- apply(city.02, 2, min)
+
+city.02 <- scale(city.02, center = mins, scale = maxs - mins)
+# Вернем колонку "Страна"
+
+city.02<-data.frame(City,city.02)
+
+city.02
+
+# Создаем матрицу попарных расстояний (по умолчанию - Евклидово расстояние)
+
+dist.city <- dist(city.02 [,2:6])
+
+# Проводим кластерный анализ,результаты записываем в список clust.protein
+
+clust.city <- hclust(dist.city, "ward.D")
+
+groups <- cutree(clust.city, k)
+city.01
 
 my_data<-city.01[,-8]
 my_data
@@ -206,7 +237,7 @@ nrow(testData)
 nrow(my_data)
 
 my_data
-myFormula <- Group ~ rozhdaem + smertnost + detsk_smertm + dlit_muzh + dlit_zhen + dohod
+myFormula <- Group ~ Случаев + Выздоровело + Смертей + Случаев_на_млн + Смертей_на_млн
 df_ctree <- ctree(myFormula, data=trainData)
 df_ctree
 table(predict(df_ctree), trainData$Group) 
