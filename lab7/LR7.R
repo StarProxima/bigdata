@@ -3,16 +3,16 @@
 # импорт данных (все спортсмены по всем видам спорта)
 df <- read.table("athlete_events.csv", sep=",", header=TRUE)
 
-wrestling<-df[which(df[, "Sport"]=="Figure Skating"), c("Name", "Sex", "Weight", "Sport")]
+figure_skating<-df[which(df[, "Sport"]=="Figure Skating"), c("Name", "Sex", "Weight", "Sport")]
 
 # удаление строчек с пустым значением поля "Вес"
-wrestling<-wrestling[-which(is.na(wrestling[, "Weight"])),]
+figure_skating<-figure_skating[-which(is.na(figure_skating[, "Weight"])),]
 
 # удаление повторяющихся строчек
-wrestling<-unique(wrestling)
+figure_skating<-unique(figure_skating)
 
 # значения столбца "Вес" становятся вектором
-x<-wrestling[1:nrow(wrestling), "Weight"]
+x<-figure_skating[1:nrow(figure_skating), "Weight"]
 
 # Одномерные статистические тесты.
 
@@ -34,7 +34,7 @@ qqline(x, col=4, lwd=2)
 #title(main="Квантильно-квантильный график", xlab="Выборочные квантили", ylab="Теоретические квантили")
 
 # Тест Стьюдента.
-t.test(x, mu=70, conf.int=TRUE)
+t.test(x, mu=60, conf.int=TRUE)
 
 # Тест Уилкоксона.
 wilcox.test(x, mu=mean(x), conf.int=TRUE)
@@ -42,29 +42,29 @@ wilcox.test(x, mu=mean(x), conf.int=TRUE)
 
 #Задание 2.
 
-wrest_gymnast<-df[which(df[, "Sport"]%in%c("Speed Skating", "Figure Skating")), c("Name", "Sex", "Weight", "Sport")]
+speed_figure<-df[which(df[, "Sport"]%in%c("Speed Skating", "Figure Skating")), c("Name", "Sex", "Weight", "Sport")]
 
-wrest_gymnast<-wrest_gymnast[-which(is.na(wrest_gymnast[, "Weight"])),]
+speed_figure<-speed_figure[-which(is.na(speed_figure[, "Weight"])),]
 
-wrest_gymnast<-wrest_gymnast[which(wrest_gymnast[, "Sex"]=="F"),]
+speed_figure<-speed_figure[which(speed_figure[, "Sex"]=="F"),]
 
-wrest_gymnast$Sport <- factor(wrest_gymnast$Sport)
-wrest_gymnast$Sport <- droplevels(wrest_gymnast$Sport)
-wrest_gymnast <- unique(wrest_gymnast)
+speed_figure$Sport <- factor(speed_figure$Sport)
+speed_figure$Sport <- droplevels(speed_figure$Sport)
+speed_figure <- unique(speed_figure)
 
-x4<-wrest_gymnast[1:nrow(wrest_gymnast), "Weight"]
+speed_figure_data<-speed_figure[1:nrow(speed_figure), "Weight"]
 
 # проверка на нормальность распределения
 # Тест Шапиро-Уилкса (Shapiro-Wilk test).
-shapiro.test(x4)
+shapiro.test(speed_figure_data)
 
 # квантильно-квантильный график
-qqnorm(x4)
-qqline(x4, col=4, lwd=2)
+qqnorm(speed_figure_data)
+qqline(speed_figure_data, col=4, lwd=2)
 
 # проверка равенство дисперсий
 # Тест Флингера-Киллина.
-fligner.test(wrest_gymnast$Weight~wrest_gymnast$Sport, wrest_gymnast)
+fligner.test(speed_figure$Weight~speed_figure$Sport, speed_figure)
 
 # проверка на отсутствие разницы в среднестатистическом значении 
-t.test(wrest_gymnast$Weight~wrest_gymnast$Sport, paired=FALSE, var.equal=TRUE)
+t.test(speed_figure$Weight~speed_figure$Sport, paired=FALSE, var.equal=TRUE)
